@@ -196,11 +196,9 @@ var model = {
 		this.src = "";
 		this.selected = false;
 		this.highlighted = false;
-
+		
 		this.changePosition = function (newRow, newColumn) {
-
-			ws.send("Message to send POSICAO");
-
+			//ws.send("Message to send POSICAO");
 			model.board.positions[this.row][this.column] = new model.Piece(this.row, this.column);
 			if (Math.abs(this.row - newRow) > 1 || Math.abs(this.row - newRow) > 1) {
 				var eatenRowPos = (this.row + newRow)/2;
@@ -274,7 +272,7 @@ var model = {
 		}
 
 		this.turnDama = function () {
-			console.log(this.row, model.board.rows);
+			console.log(this.row, this.column);
 			return this.row == 0;
 		}
 
@@ -286,7 +284,7 @@ var model = {
 
 	WhitePiece: function (row, column) {
 		this.__proto__ = new model.Piece(row, column);
-		this.src = 'img/white.png';
+		this.src = 'public/img/white.png';
 		this.color = "white";
 
 		this.highlightMoves = function (row, column) {
@@ -299,7 +297,7 @@ var model = {
 		}
 
 		this.turnDama = function () {
-			console.log(this.row, model.board.rows);
+			console.log(this.row, this.column);
 			return this.row == model.board.rows-1;
 		}
 
@@ -311,7 +309,7 @@ var model = {
 
 	BlackDama: function (row, column) {
 		this.__proto__ = new model.BlackPiece(row, column);
-		this.src = 'img/blackdama.png';
+		this.src = 'public/img/blackdama.png';
 
 		this.highlightMoves = function (row, column) {
 
@@ -336,7 +334,7 @@ var model = {
 
 	WhiteDama: function (row, column) {
 		this.__proto__ = new model.WhitePiece(row, column);
-		this.src = 'img/whitedama.png';
+		this.src = 'public/img/whitedama.png';
 
 		this.highlightMoves = function (row, column) {
 
@@ -365,9 +363,9 @@ var model = {
 var ws = new WebSocket("ws://localhost:8281/echo")
 ws.onmessage = function (evt) { 
 	var received_msg = evt.data;
-
-	console.log(received_msg)
-	
+	var array = received_msg.split('');
+	console.log(array);
+	model.Piece(99, array);
  };
 
 var init = function() { 

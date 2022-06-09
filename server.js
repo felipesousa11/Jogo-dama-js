@@ -25,13 +25,11 @@ const wsocket = new WebSocket.Server({
 
 wsocket.on("connection", (ws, req)=>{
     console.log("Cliente conectado")
-    ws.send("Teste")
+   ws.send("Teste")
     CLIENTS.push(ws);
     ws.on("message", (data)=>{
         console.log("mensagem")
-
         console.log(data.toString())
-       
     })
 })
   
