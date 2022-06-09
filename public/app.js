@@ -362,11 +362,11 @@ var model = {
 
 var ws = new WebSocket("ws://localhost:8281/echo")
 ws.onmessage = function (evt) { 
+	init();
 	var received_msg = evt.data;
 	var array = received_msg.split('');
-	console.log(array);
-	model.Piece(99, array);
- };
+	model.board.drawBoard();
+};
 
 var init = function() { 
 	model.board.initBoard(8, 8, 12); 
