@@ -198,7 +198,6 @@ var model = {
 		this.highlighted = false;
 		
 		this.changePosition = function (newRow, newColumn, servidor = null) {
-			console.log(newRow, newColumn);
 			//ws.send("Message to send POSICAO");
 			model.board.positions[this.row][this.column] = new model.Piece(this.row, this.column);
 			if (Math.abs(this.row - newRow) > 1 || Math.abs(this.row - newRow) > 1) {
@@ -214,11 +213,19 @@ var model = {
 
 			this.row = newRow;
 			this.column = newColumn; 
+			
+			console.log(this);
 			model.board.positions[this.row][this.column] = this;
-
+	
 			model.turn = model.turn == "white" ? "black" : "white";
 
-			if(!servidor){
+			if(servidor){
+				if (model.turn == "black") {
+					model.board.positions[this.row][this.column] = new model.WhiteDama(this.row, this.column);
+				} else {
+					model.board.positions[this.row][this.column] = new model.BlackDama(this.row, this.column);
+				}
+			}else{
 				if (this.turnDama()){
 					if (model.turn == "black") {
 						model.board.positions[this.row][this.column] = new model.WhiteDama(this.row, this.column);
@@ -227,6 +234,7 @@ var model = {
 					}
 				}
 			}
+
 		}
 
 		this.draw = function () {
@@ -312,7 +320,7 @@ var model = {
 
 	BlackDama: function (row, column) {
 		this.__proto__ = new model.BlackPiece(row, column);
-		this.src = 'public/img/blackdama.png';
+		this.src = 'public/img/black.png';
 
 		this.highlightMoves = function (row, column) {
 
@@ -337,7 +345,7 @@ var model = {
 
 	WhiteDama: function (row, column) {
 		this.__proto__ = new model.WhitePiece(row, column);
-		this.src = 'public/img/whitedama.png';
+		this.src = 'public/img/white.png';
 
 		this.highlightMoves = function (row, column) {
 
@@ -368,7 +376,6 @@ ws.onmessage = function (evt) {
 	console.log(evt);
 	var received_msg = evt.data;
 	var array = received_msg.split('');
-	model.board.drawBoard();
 	if(array[0] == 'o'){
 		model.turn = 'white';
 	}else if (array[0] == 'x'){
@@ -383,7 +390,7 @@ ws.onmessage = function (evt) {
 var init = function() { 
 	model.board.initBoard(8, 8, 12); 
 	model.board.drawBoard();
-}
+}	
 
 Object.observe(model, function(changes){
     changes.forEach(function(change) {
