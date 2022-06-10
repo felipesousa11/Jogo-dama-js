@@ -377,9 +377,9 @@ var ws = new WebSocket("ws://localhost:8281/echo")
 ws.onmessage = function (evt) { 
 	console.log(evt);
 	var received_msg = evt.data;
-	typeof(received_msg == string);
+	typeof(received_msg == 'string');
 		var array = received_msg.split('');
-		
+
 	if(array[0] == 'o'){
 		model.turn = 'white';
 	}else if (array[0] == 'x'){
