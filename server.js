@@ -25,25 +25,21 @@ const wsocket = new WebSocket.Server({
 
 wsocket.on("connection", (ws, req)=>{
     console.log("Cliente conectado")
-   ws.send("Teste")
     CLIENTS.push(ws);
     ws.on("message", (data)=>{
-        console.log("mensagem")
-        console.log(data.toString())
+        ws.send(data.toString() );
     })
 })
   
-
 const handleConnection = socket =>{
     console.log('Alguém se conectou!')
     socket.on('data', data =>{
+        console.log(data);
         CLIENTS.forEach(element => {
             element.send(data.toString())
          });
-
-    //socket.emit(data);
+    socket.emit(data);
     })
-    
 }
 
 const server = net.createServer(handleConnection)

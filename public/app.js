@@ -198,7 +198,10 @@ var model = {
 		this.highlighted = false;
 		
 		this.changePosition = function (newRow, newColumn, servidor = null) {
-			//ws.send("Message to send POSICAO");
+			if(!servidor){
+				obj = model.turn + '' + this.row + '' + this.column + '' + newRow + '' + newColumn;
+				ws.send(obj.toString());	
+			}
 			model.board.positions[this.row][this.column] = new model.Piece(this.row, this.column);
 			if (Math.abs(this.row - newRow) > 1 || Math.abs(this.row - newRow) > 1) {
 				var eatenRowPos = (this.row + newRow)/2;
@@ -214,13 +217,12 @@ var model = {
 			this.row = newRow;
 			this.column = newColumn; 
 			
-			console.log(this);
 			model.board.positions[this.row][this.column] = this;
 	
 			model.turn = model.turn == "white" ? "black" : "white";
 
 			if(servidor){
-				if (model.turn == "black") {
+ 				if (model.turn == "black") {
 					model.board.positions[this.row][this.column] = new model.WhiteDama(this.row, this.column);
 				} else {
 					model.board.positions[this.row][this.column] = new model.BlackDama(this.row, this.column);
@@ -375,7 +377,9 @@ var ws = new WebSocket("ws://localhost:8281/echo")
 ws.onmessage = function (evt) { 
 	console.log(evt);
 	var received_msg = evt.data;
-	var array = received_msg.split('');
+	typeof(received_msg == string);
+		var array = received_msg.split('');
+		
 	if(array[0] == 'o'){
 		model.turn = 'white';
 	}else if (array[0] == 'x'){
