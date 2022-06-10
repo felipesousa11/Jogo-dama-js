@@ -37,13 +37,9 @@ wsocket.on("connection", (ws, req)=>{
 const handleConnection = socket =>{
     console.log('Alguém se conectou!')
     socket.on('data', data =>{
-
-      
         CLIENTS.forEach(element => {
             element.send(data.toString())
-        });
-            
-        console.log(data.toString());
+         });
 
     //socket.emit(data);
     })

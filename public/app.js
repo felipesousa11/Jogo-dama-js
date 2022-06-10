@@ -197,7 +197,8 @@ var model = {
 		this.selected = false;
 		this.highlighted = false;
 		
-		this.changePosition = function (newRow, newColumn) {
+		this.changePosition = function (newRow, newColumn, servidor = null) {
+			console.log(newRow, newColumn);
 			//ws.send("Message to send POSICAO");
 			model.board.positions[this.row][this.column] = new model.Piece(this.row, this.column);
 			if (Math.abs(this.row - newRow) > 1 || Math.abs(this.row - newRow) > 1) {
@@ -217,12 +218,15 @@ var model = {
 
 			model.turn = model.turn == "white" ? "black" : "white";
 
-			if (this.turnDama())
-				if (model.turn == "black") {
-					model.board.positions[this.row][this.column] = new model.WhiteDama(this.row, this.column);
-				} else {
-					model.board.positions[this.row][this.column] = new model.BlackDama(this.row, this.column);
+			if(!servidor){
+				if (this.turnDama()){
+					if (model.turn == "black") {
+						model.board.positions[this.row][this.column] = new model.WhiteDama(this.row, this.column);
+					} else {
+						model.board.positions[this.row][this.column] = new model.BlackDama(this.row, this.column);
+					}
 				}
+			}
 		}
 
 		this.draw = function () {
@@ -253,7 +257,6 @@ var model = {
 		this.findCell = function () {
 			return document.querySelectorAll('div[row="'+this.row+'"][column="'+this.column+'"]')[0];
 		}
-
 	},
 
 	BlackPiece: function (row, column) {
@@ -362,10 +365,19 @@ var model = {
 
 var ws = new WebSocket("ws://localhost:8281/echo")
 ws.onmessage = function (evt) { 
-	init();
+	console.log(evt);
 	var received_msg = evt.data;
 	var array = received_msg.split('');
 	model.board.drawBoard();
+	if(array[0] == 'o'){
+		model.turn = 'white';
+	}else if (array[0] == 'x'){
+		model.turn = 'black';
+	}
+	teste = new model.Piece((7 - parseInt(array[1])), parseInt(array[2]));
+	teste2 = teste.changePosition((7 - parseInt(array[3])), parseInt(array[4]), true);
+	model.board.drawBoard();
+	//mensagem = model.turn + ' ' + model.Piece(array[1],array[2]);
 };
 
 var init = function() { 
