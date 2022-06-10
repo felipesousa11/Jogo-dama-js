@@ -22,25 +22,35 @@ const wsocket = new WebSocket.Server({
     port: 8281
 });
 
-
 wsocket.on("connection", (ws, req)=>{
     console.log("Cliente conectado")
     CLIENTS.push(ws);
     ws.on("message", (data)=>{
-        ws.send(data.toString() );
+        //ws.send(data.toString());
+        //console.log(data.toString());
+        clientePython.write(data.toString());
     })
 })
-  
+
+const handleTeste = socket =>{
+    socket.on('data', data=>{
+        console.log(data.toString());
+    })
+}
+clientePython = [];
 const handleConnection = socket =>{
     console.log('Alguém se conectou!')
+    clientePython = socket;
     socket.on('data', data =>{
-        console.log(data);
+        console.log(data.toString())
+        
         CLIENTS.forEach(element => {
             element.send(data.toString())
-         });
-    socket.emit(data);
+        });
+    //socket.emit(data);
     })
 }
 
 const server = net.createServer(handleConnection)
 server.listen(5000, '127.0.0.1')
+

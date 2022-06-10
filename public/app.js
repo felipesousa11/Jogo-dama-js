@@ -199,8 +199,11 @@ var model = {
 		
 		this.changePosition = function (newRow, newColumn, servidor = null) {
 			if(!servidor){
-				obj = model.turn + '' + this.row + '' + this.column + '' + newRow + '' + newColumn;
-				ws.send(obj.toString());	
+				if (model.turn == 'black')
+					obj = 'x' + '-' + this.row + '-' + this.column + '-' + newRow + '-' + newColumn;
+				else
+					obj = 'o' + '-' + this.row + '-' + this.column + '-' + newRow + '-' + newColumn;
+				ws.send(obj);	
 			}
 			model.board.positions[this.row][this.column] = new model.Piece(this.row, this.column);
 			if (Math.abs(this.row - newRow) > 1 || Math.abs(this.row - newRow) > 1) {
@@ -372,13 +375,10 @@ var model = {
 
 };
 
-
 var ws = new WebSocket("ws://localhost:8281/echo")
 ws.onmessage = function (evt) { 
-	console.log(evt);
 	var received_msg = evt.data;
-	typeof(received_msg == 'string');
-		var array = received_msg.split('');
+	var array = received_msg.split('');
 
 	if(array[0] == 'o'){
 		model.turn = 'white';
